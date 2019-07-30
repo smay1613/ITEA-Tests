@@ -2,9 +2,6 @@ cmake_minimum_required(VERSION 3.0)
 
 project(AVProcessing VERSION 1.0.0)
 
-find_package(PkgConfig)
-pkg_check_modules(TAGLIB REQUIRED taglib)
-
 set(sources
     "src/Utils.cpp"
 )

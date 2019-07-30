@@ -1,15 +1,5 @@
 #include "Utils.h"
-#include "AVTypes.h"
 #include <vector>
-#include <taglib/apetag.h>
-#include <taglib/id3v2tag.h>
-#include <taglib/asffile.h>
-#include <taglib/flacfile.h>
-#include <taglib/mp4file.h>
-#include <taglib/mpegfile.h>
-#include <taglib/apefile.h>
-#include <taglib/mpcfile.h>
-#include <taglib/wavfile.h>
 
 namespace avprocessing
 {
