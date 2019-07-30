@@ -88,5 +88,5 @@ install(
 set(test true)
 
 if (test)
-  add_subdirectory(UT)
+  add_subdirectory(tests)
 endif()

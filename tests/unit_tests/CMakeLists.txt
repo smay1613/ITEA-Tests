@@ -6,15 +6,15 @@ project (AVProcessing_UT
 set (CMAKE_CXX_STANDARD 11)
 
 set(sources
-    "${AVPROCESSING_UT_DIRECTORY}/src/main.cpp"
-    "${AVPROCESSING_UT_DIRECTORY}/src/TestMetadataUtils.cpp")
+    "${AVP_UT_DIRECTORY}/src/main.cpp"
+    "${AVP_UT_DIRECTORY}/src/TestMetadataUtils.cpp")
 
 set(headers
-    "${AVPROCESSING_UT_DIRECTORY}/headers/TestMetadataUtils.h")
+    "${AVP_UT_DIRECTORY}/headers/TestMetadataUtils.h")
 
 include_directories(AVProcessing_UT
     PRIVATE
-        ${AVPROCESSING_UT_DIRECTORY}/headers
+        ${AVP_UT}/headers
 )
 
 add_definitions(-DGTEST_LANGUAGE_CXX11)
