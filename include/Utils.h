@@ -1,13 +1,12 @@
 #pragma once
 #include <string>
-#include <chrono>
+#include <vector>
+#include <forward_list>
+#include <TestMetadataUtils.h>
 
-namespace avprocessing
-{
-namespace utilities
-{
-    std::string getFileName(const std::string& path);
-    std::string getFolderName(const std::string& path);
-    std::chrono::milliseconds durationToMilliseconds(int duration);
-}
-}
+std::vector<int> combineVectors(const std::vector<int>::iterator firstVectorBeginIterator, const std::vector<int>::iterator firstVectorEndIterator,
+                                const std::vector<int>::iterator secondVectorBeginIterator, const std::vector<int>::iterator secondVectorEndIterator);
+
+size_t magicNumber(const size_t number, const size_t degree);
+
+void reverse(std::forward_list<int>& listToReverse);
