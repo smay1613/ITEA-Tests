@@ -5,39 +5,39 @@
 
 void reverse(std::forward_list<int>& listToReverse)
 {
-    std::forward_list<int> tmpForwardList {};
+    std::forward_list<int> temporaryForwardList;
+    for (const auto& entry : listToReverse) {
+        temporaryForwardList.push_front(entry);
+    }
+    listToReverse.clear();
+    listToReverse.splice_after(listToReverse.before_begin(), temporaryForwardList);
+}
 
-      for(const auto &value: listToReverse) {
-          tmpForwardList.push_front(value);
-      }
+size_t getFirstNumber(size_t number) {
+    while (number / 10 > 0) {
+        number /= 10;
+    }
+    return number;
+}
 
-      listToReverse.clear();
-      listToReverse.splice_after(listToReverse.before_begin(),tmpForwardList);
+size_t getLastNumber(size_t number) {
+    return number % 10;
 }
 
 size_t magicNumber(const size_t number, const size_t degree)
 {
-    std::list<size_t> resultList {};
-      size_t calcResult = 0, lastDigit = 0, firstDigit = 0;
+    std::list<size_t> listOfNumbers;
+    size_t value = 1, result = 0;
+    for (size_t i = 0; i < degree; i++) {
+        value *= number;
+        listOfNumbers.push_back(getFirstNumber(value));
+        listOfNumbers.push_back(getLastNumber(value));
+    }
 
-      for (size_t counter = 1; counter <= degree; ++counter) {
-        calcResult = static_cast<size_t>(pow(number, counter)) ;
-        lastDigit = calcResult % 10;
-        while (calcResult) {
-          firstDigit = calcResult % 10;
-          calcResult /= 10;
-        }
-        resultList.push_back(firstDigit);
-        resultList.push_back(lastDigit);
-      }
-
-      size_t result {};
-
-      for (const size_t& elements : resultList) {
-             result = result * 10 + elements;
-         }
-
-      return result;
+    for (const auto& entry : listOfNumbers) {
+        result = result * 10 + entry;
+    }
+    return result;
 }
 
 std::vector<int> combineVectors(const std::vector<int>::iterator firstVectorBeginIterator,
@@ -45,9 +45,8 @@ std::vector<int> combineVectors(const std::vector<int>::iterator firstVectorBegi
                                 const std::vector<int>::iterator secondVectorBeginIterator,
                                 const std::vector<int>::iterator secondVectorEndIterator)
 {
-    std::vector<int> unitedVector {};
-
-    unitedVector.insert(unitedVector.end(), firstVectorBeginIterator, firstVectorEndIterator);
-    unitedVector.insert(unitedVector.end(), secondVectorBeginIterator, secondVectorEndIterator);
-    return unitedVector;
+    std::vector<int> resultVector(static_cast<unsigned int>(firstVectorEndIterator - firstVectorBeginIterator + secondVectorEndIterator - secondVectorBeginIterator));
+    std::copy(firstVectorBeginIterator, firstVectorEndIterator, resultVector.begin());
+    std::copy(secondVectorBeginIterator, secondVectorEndIterator, resultVector.begin() + (firstVectorEndIterator - firstVectorBeginIterator));
+    return resultVector;
 }
