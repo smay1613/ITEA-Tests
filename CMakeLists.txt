@@ -1,17 +1,20 @@
 cmake_minimum_required(VERSION 3.0)
 
-project(AVProcessing VERSION 1.0.0)
+project(HomeworkTests VERSION 1.0.0)
+
+set(LESSON_NUMBER 1)
+set(LESSON_DIR Lesson${LESSON_NUMBER})
 
 set(sources
-    "src/Utils.cpp"
+    "src/${LESSON_DIR}/HomeworkImpl.cpp"
 )
 
 set(headers
-    "src/Utils.h")
+    "src/${LESSON_DIR}/Homework.h")
 
-add_library(AVInterface SHARED ${sources})
+add_library(HomeworkTests SHARED ${sources})
 
-set_target_properties(AVInterface PROPERTIES 
+set_target_properties(HomeworkTests PROPERTIES
                         C_STANDARD 11
                         CXX_STANDARD 11
                         PUBLIC_HEADER "${headers}"
@@ -19,68 +22,16 @@ set_target_properties(AVInterface PROPERTIES
                         SOVERSION "${PROJECT_VERSION_MAJOR}"
 )
 
-target_compile_options(AVInterface PRIVATE -Wall -Wextra)
+target_compile_options(HomeworkTests PRIVATE -Wall -Wextra)
 
-target_include_directories(AVInterface
-    PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src
+target_include_directories(HomeworkTests
+    PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/${LESSON_DIR}
     PUBLIC
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/${LESSON_DIR}>
         $<INSTALL_INTERFACE:include>
 )
 
-# Introduce variables:
-# * CMAKE_INSTALL_LIBDIR
-# * CMAKE_INSTALL_BINDIR
-# * CMAKE_INSTALL_INCLUDEDIR
 include(GNUInstallDirs)
-
-# Layout. This works for all platforms:
-#   * <prefix>/lib*/cmake/<PROJECT-NAME>
-#   * <prefix>/lib*/
-#   * <prefix>/include/
-set(config_install_dir "${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}")
-
-set(generated_dir "${CMAKE_CURRENT_BINARY_DIR}/generated")
-
-set(version_config "${generated_dir}/${PROJECT_NAME}ConfigVersion.cmake")
-set(project_config "${generated_dir}/${PROJECT_NAME}Config.cmake")
-set(TARGETS_EXPORT_NAME "${PROJECT_NAME}Targets")
-set(namespace "${PROJECT_NAME}::")
-
-# Include module with fuction 'write_basic_package_version_file'
-include(CMakePackageConfigHelpers)
-
-# Configure '<PROJECT-NAME>ConfigVersion.cmake'
-# Use:
-#   * PROJECT_VERSION
-write_basic_package_version_file(
-    "${version_config}" COMPATIBILITY SameMajorVersion
-)
-
-install(
-    TARGETS AVInterface
-    EXPORT "${TARGETS_EXPORT_NAME}"
-    RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
-    LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
-    PUBLIC_HEADER DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}"
-    INCLUDES DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}"
-)
-
-# Config
-#   * <prefix>/lib/cmake/<PROJECT-NAME>/<PROJECT-NAME>Config.cmake
-#   * <prefix>/lib/cmake/<PROJECT-NAME>/<PROJECT-NAME>ConfigVersion.cmake
-install(
-    FILES "${project_config}" "${version_config}"
-    DESTINATION "${config_install_dir}"
-)
-
-# Config
-#   * <prefix>/lib/cmake/<PROJECT-NAME>/<PROJECT-NAME>Targets.cmake
-install(
-    EXPORT "${TARGETS_EXPORT_NAME}"
-    NAMESPACE "${namespace}"
-    DESTINATION "${config_install_dir}"
-)
 
 set(test true)
 

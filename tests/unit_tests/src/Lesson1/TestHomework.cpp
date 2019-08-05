@@ -1,5 +1,5 @@
-#include "TestMetadataUtils.h"
-#include "Utils.h"
+#include "TestHomework.h"
+#include "Homework.h"
 #include <forward_list>
 
 TEST_F(listReverseTest, TrueReverse) {
@@ -300,7 +300,7 @@ INSTANTIATE_TEST_CASE_P(,concat,::testing::Values
 
 
 INSTANTIATE_TEST_CASE_P(Values,
-                        combineVectors,
+                        unionVectors,
                         ::testing::Values(std::make_pair(std::vector<int>{1,2,3},        std::vector<int>{4,5,6}),
                                           std::make_pair(std::vector<int>{1,2,3,4,5,6},  std::vector<int>{}),
                                           std::make_pair(std::vector<int>{},             std::vector<int>{1,2,3,4,5,6}),
@@ -308,7 +308,7 @@ INSTANTIATE_TEST_CASE_P(Values,
                                           std::make_pair(std::vector<int>{1,2,3,4,5},    std::vector<int>{6})
                                           ));
 
-TEST_P(combineVectors, combineVectors)
+TEST_P(unionVectors, combineVectors)
 {
 std::vector<int> firstVec = std::get<0>(GetParam());
 std::vector<int> secondVec = std::get<1>(GetParam());
