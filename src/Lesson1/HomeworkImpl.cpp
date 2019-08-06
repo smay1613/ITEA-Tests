@@ -5,50 +5,47 @@
 
 void reverse(std::forward_list<int>& listToReverse)
 {
-    std::forward_list<int>reverseForvardListData;
-    for(const auto &value: listToReverse){
-        reverseForvardListData.push_front(value);
+    std::forward_list<int> tmp_forward_list {};
+
+    for(const auto &i : listToReverse)
+    {
+        tmp_forward_list.push_front(i);
     }
-    const std::forward_list<int> returnlist{reverseForvardListData};
-    reverseForvardListData.swap(listToReverse);
+
+    listToReverse.clear();
+    listToReverse.swap(tmp_forward_list);
 }
 
-size_t magicNumber(const size_t number, const size_t degree)
+size_t magicNumber(const size_t N, const size_t X)
 {
-    size_t _degree{degree};
-    size_t _number{number};
-    if (_number < 0)
-        _number *= -1;
-    std::list<size_t>resultList;
-    size_t result{0};
-    int numberDegree = 1;
-    for (int i = 1; i<=_degree; i++){
-        int tmpFirstNumber{};
-        int tmpSecondNubmer{};
-        numberDegree *= _number;
-        if(numberDegree > 9){
-            tmpFirstNumber = numberDegree;
-            tmpSecondNubmer = numberDegree % 10;
-            while (tmpFirstNumber > 9) {
-                tmpFirstNumber /= 10;
-            }
-            resultList.push_back(tmpFirstNumber *10 + tmpSecondNubmer);
-        }
-        else{
-            tmpFirstNumber = numberDegree;
-            resultList.push_back(tmpFirstNumber);
-        }
-    }
-    for(const auto &value: resultList){
-        if(value<10){
-            result*= 10;
-        }
-        else{
-            result*= 100;
-        }
-        result += value;
-    }
-    return result;
+    std::list<size_t> tmp_list {};
+
+       size_t number {1};
+       size_t first_number {0};
+       size_t last_number {0};
+
+       for(size_t i = 0; i < X; ++i)
+       {
+           number *= N;
+           first_number = number;
+           last_number = number % 10;
+
+           while(first_number >= 10)
+           {
+               first_number /= 10;
+           }
+           tmp_list.push_back(first_number);
+           tmp_list.push_back(last_number);
+       }
+
+       size_t result {};
+
+       for (const auto &i : tmp_list)
+       {
+           result = result * 10 + i;
+       }
+
+       return result;
 }
 
 std::vector<int> combineVectors(const std::vector<int>::iterator firstVectorBeginIterator,
@@ -56,7 +53,9 @@ std::vector<int> combineVectors(const std::vector<int>::iterator firstVectorBegi
                                 const std::vector<int>::iterator secondVectorBeginIterator,
                                 const std::vector<int>::iterator secondVectorEndIterator)
 {
-    std::vector<int>tmp {firstVectorBeginIterator,firstVectorEndIterator};
-    tmp.insert(tmp.end(), secondVectorBeginIterator, secondVectorEndIterator);
-    return tmp;
+    std::vector<int> tmp_vec{};
+    tmp_vec.insert(tmp_vec.end(), firstVectorBeginIterator, firstVectorEndIterator);
+    tmp_vec.insert(tmp_vec.end(), secondVectorBeginIterator, secondVectorEndIterator);
+
+    return tmp_vec;
 }
