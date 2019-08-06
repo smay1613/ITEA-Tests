@@ -5,39 +5,34 @@
 
 void reverse(std::forward_list<int>& listToReverse)
 {
-    std::forward_list<int> temporaryForwardList;
-    for (const auto& entry : listToReverse) {
-        temporaryForwardList.push_front(entry);
-    }
-    listToReverse.clear();
-    listToReverse.splice_after(listToReverse.before_begin(), temporaryForwardList);
-}
-
-size_t getFirstNumber(size_t number) {
-    while (number / 10 > 0) {
-        number /= 10;
-    }
-    return number;
-}
-
-size_t getLastNumber(size_t number) {
-    return number % 10;
+    std::forward_list<int> values_2;
+        for (const auto& element : listToReverse)
+        {
+            values_2.push_front(element);
+        }
+        values_2.swap(listToReverse);
 }
 
 size_t magicNumber(const size_t number, const size_t degree)
 {
-    std::list<size_t> listOfNumbers;
-    size_t value = 1, result = 0;
-    for (size_t i = 0; i < degree; i++) {
-        value *= number;
-        listOfNumbers.push_back(getFirstNumber(value));
-        listOfNumbers.push_back(getLastNumber(value));
-    }
+//    std::list<int> number_l;
+//    int numeric;
+//    for (int i=1; i<=degree; i++)
+//    {
+//        numeric = pow(number, i);
 
-    for (const auto& entry : listOfNumbers) {
-        result = result * 10 + entry;
-    }
-    return result;
+//        int a = numeric;
+//        while (a>9) {
+//            a = a/10;
+//        }
+//        number_l.push_back(a);
+
+//        if (numeric > 9)
+//        {
+//            number_l.push_back(numeric%10);
+//        }
+//    }
+//    return number_l;
 }
 
 std::vector<int> combineVectors(const std::vector<int>::iterator firstVectorBeginIterator,
@@ -45,8 +40,18 @@ std::vector<int> combineVectors(const std::vector<int>::iterator firstVectorBegi
                                 const std::vector<int>::iterator secondVectorBeginIterator,
                                 const std::vector<int>::iterator secondVectorEndIterator)
 {
-    std::vector<int> resultVector(static_cast<unsigned int>(firstVectorEndIterator - firstVectorBeginIterator + secondVectorEndIterator - secondVectorBeginIterator));
-    std::copy(firstVectorBeginIterator, firstVectorEndIterator, resultVector.begin());
-    std::copy(secondVectorBeginIterator, secondVectorEndIterator, resultVector.begin() + (firstVectorEndIterator - firstVectorBeginIterator));
-    return resultVector;
+    std::vector<int> vector;
+    std::vector<int>::size_type size = firstVectorEndIterator.base() - firstVectorBeginIterator.base() + secondVectorEndIterator.base() - secondVectorBeginIterator.base();
+    vector.reserve(size);
+
+    for (std::vector<int>::iterator element = firstVectorBeginIterator; element.base() < firstVectorEndIterator.base(); element++)
+    {
+        vector.push_back(*element);
+    }
+
+    for (std::vector<int>::iterator element = secondVectorBeginIterator; element.base() < secondVectorEndIterator.base(); element++)
+    {
+        vector.push_back(*element);
+    }
+    return vector;
 }
