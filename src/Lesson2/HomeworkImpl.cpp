@@ -18,37 +18,67 @@ struct node
     struct node *level = nullptr;
 };
 
-void linkLevelNodes(node* root)
+void linkLevelnodes(node* root)
 {
+    if(!root){
+        return;
+    }
 
+    std::queue<node*> binary_tree;
+    binary_tree.push(root);
+    binary_tree.push(nullptr);
+    while(!binary_tree.empty())
+    {
+        node* tmp = binary_tree.front();
+        binary_tree.pop();
+        tmp->level = binary_tree.front();
+
+        if(tmp->left)
+        {
+            binary_tree.push(tmp->left);
+        }
+
+        if(tmp->right)
+        {
+            binary_tree.push(tmp->right);
+        }
+
+        if(!binary_tree.front())
+        {
+            binary_tree.pop();
+
+            if(!binary_tree.empty())
+            {
+                binary_tree.push(nullptr);
+            }
+        }
+    }
 }
 
 bool isExpressionValid(const std::string &expression)
 {
-    std::stack <char> bracecStack{};
-
-    for(const auto &brace : expression)
+    std::stack<char> result {};
+    for (size_t i = 0; i < expression.length(); ++i)
     {
-        if(brace == '(' || brace == '{' || brace == '[')
+        if (expression[i] == '(' || expression[i] == '[' || expression[i] == '{')
         {
-            bracecStack.push(brace);
+            result.push(expression[i]);
         }
-
-        if(bracecStack.empty())
+        else if (expression[i] == ')' || expression[i] == ']' || expression[i] == '}')
         {
-            return false;
-        }
-
-        if(!bracecStack.empty())
-        {
-            if((brace == ')' && bracecStack.top() == '(')
-               || (brace == '}' && bracecStack.top() == '{')
-               || (brace == ']' && bracecStack.top() == '['))
+            if
+                    (
+                     result.empty()
+                     ||((expression[i] == ')') ^ (result.top() == '('))
+                     ||((expression[i] == '}') ^ (result.top() == '{'))
+                     ||((expression[i] == ']') ^ (result.top() == '['))
+                     )
             {
-                bracecStack.pop();
+                return false;
             }
+            result.pop();
         }
     }
-    return bracecStack.empty();
+    return result.empty();
 }
 
