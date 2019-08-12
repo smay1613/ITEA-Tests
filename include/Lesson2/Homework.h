@@ -4,4 +4,4 @@
 bool isExpressionValid(const std::string& expression);
 
 struct node;
-void linkLevelNodes(node*);
+void linkLevelNodes(node* root);

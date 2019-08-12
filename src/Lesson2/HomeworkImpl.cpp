@@ -18,211 +18,90 @@ struct node
     struct node *level = nullptr;
 };
 
-void linkLevelNodes(node* element)
+void linkLevelNodes(node* root)
 {
-    if (element==nullptr)
+    std::queue<node *> firstLevel;
+    firstLevel.push(root);
+    while (!firstLevel.empty())
     {
-        return;
-    }
-    std::queue<node*> nodes_queue;
-    node* element_level_1 = nullptr;
-    node* element_level_2 = element->left;
-
-    nodes_queue.push(element);
-
-    while (!nodes_queue.empty())
-    {
-        if (nodes_queue.front()->left!=nullptr)
+        std::queue<node *> secondLevel;
+        if (firstLevel.front()->left != nullptr)
         {
-            nodes_queue.push(nodes_queue.front()->left);
+            secondLevel.push(firstLevel.front()->left);
         }
-        if (nodes_queue.front()->right!=nullptr)
+        if (firstLevel.front()->right != nullptr)
         {
-            nodes_queue.push(nodes_queue.front()->right);
+            secondLevel.push(firstLevel.front()->right);
         }
-
-        if (element_level_1 == nullptr)
+        node* tmp = firstLevel.front();
+        firstLevel.pop();
+        while (!firstLevel.empty())
         {
-            element_level_1 = nodes_queue.front();
-        }
-        else
-        {
-            if (nodes_queue.front() == element_level_2)
+            tmp->level = firstLevel.front();
+            tmp = tmp->level;
+            if (tmp->left != nullptr)
             {
-                element_level_1 = nodes_queue.front();
-                element_level_2 = nodes_queue.front()->left;
+                secondLevel.push(tmp->left);
             }
-            else
+            if (tmp->right != nullptr)
             {
-                element_level_1->level = nodes_queue.front();
-                element_level_1 = nodes_queue.front();
+                secondLevel.push(tmp->right);
             }
+            firstLevel.pop();
         }
-        nodes_queue.pop();
+        tmp->level = nullptr;
+        firstLevel = secondLevel;
     }
 }
 
-struct comporator
-{
-    bool operator()(const node &lhs, const node &rhs)
+char reverseRightToLeftBracketsFunction(const char m_rightBrackets){
+    switch (m_rightBrackets)
     {
-        if (lhs.n == rhs.n && lhs.left==rhs.left && lhs.right==rhs.right && lhs.level==rhs.level)
-        {
+    case '}':
+    {
+        return '{';
+    }
+    case ')':
+    {
+        return '(';
+    }
+    case ']':
+    {
+        return '[';
+    }
+    default:
+        return NULL;
+    }
+}
+
+bool isExpressionValid(const std::string &expression)
+{
+    std::stack<char>stackOpenBrackets;
+        for(const auto &value: expression){
+            if(value == '{' || value == '(' || value == '[')
+            {
+                stackOpenBrackets.push(value);
+            }
+            else {
+                if(stackOpenBrackets.empty()){
+                    return false;
+                }
+
+                char reverseRightToLeftBrackets{reverseRightToLeftBracketsFunction(value)};
+
+                if(stackOpenBrackets.top() != reverseRightToLeftBrackets )
+                {
+                    return false;
+                }
+                else
+                {
+                    stackOpenBrackets.pop();
+                }
+            }
+        }
+        if(stackOpenBrackets.empty()){
             return true;
         }
-        else
-        {
-            return false;
-        }
-    }
-};
-
-struct bracket
-{
-    bracket(size_t _type) : type(_type)
-    {}
-    size_t type;
-    size_t number = 1;
-};
-
-bool isExpressionValid(const std::string &str)
-{
-    std::stack<bracket> data_stack;
-    if (str.empty())
-    {
         return false;
-    }
-    else
-    {
-        for (const char& c : str)
-        {
-            switch (c)
-            {
-                case '(':
-                    if (!data_stack.empty())
-                    {
-                        if (data_stack.top().type == 0)
-                        {
-                            data_stack.top().number++;
-                        }
-                        else
-                        {
-                            data_stack.emplace(bracket{0});
-                        }
-                    }
-                    else
-                    {
-                        data_stack.emplace(bracket{0});
-                    }
-                break;
-                case ')':
-                    if (!data_stack.empty())
-                    {
-                        if (data_stack.top().type == 0)
-                        {
-                            data_stack.top().number--;
-                            if (data_stack.top().number == 0)
-                            {
-                                data_stack.pop();
-                            }
-                        }
-                        else
-                        {
-                            data_stack.emplace(bracket{0});
-                        }
-                    }
-                    else
-                    {
-                        return false;
-                    }
-                break;
-                case '[':
-                    if (!data_stack.empty())
-                    {
-                        if (data_stack.top().type == 1)
-                        {
-                            data_stack.top().number++;
-                        }
-                        else
-                        {
-                            data_stack.emplace(bracket{1});
-                        }
-                    }
-                    else
-                    {
-                        data_stack.emplace(bracket{1});
-                    }
-                break;
-                case ']':
-                    if (!data_stack.empty())
-                    {
-                        if (data_stack.top().type == 1)
-                        {
-                            data_stack.top().number--;
-                            if (data_stack.top().number == 0)
-                            {
-                                data_stack.pop();
-                            }
-                        }
-                        else
-                        {
-                            data_stack.emplace(bracket{1});
-                        }
-                    }
-                    else
-                    {
-                        return false;
-                    }
-                break;
-                case '{':
-                    if (!data_stack.empty())
-                    {
-                        if (data_stack.top().type == 2)
-                        {
-                            data_stack.top().number++;
-                        }
-                        else
-                        {
-                            data_stack.emplace(bracket{2});
-                        }
-                    }
-                    else
-                    {
-                        data_stack.emplace(bracket{2});
-                    }
-                break;
-                case '}':
-                    if (!data_stack.empty())
-                    {
-                        if (data_stack.top().type == 2)
-                        {
-                            data_stack.top().number--;
-                            if (data_stack.top().number == 0)
-                            {
-                                data_stack.pop();
-                            }
-                        }
-                        else
-                        {
-                            data_stack.emplace(bracket{2});
-                        }
-                    }
-                    else
-                    {
-                        return false;
-                    }
-                break;
-            }
-        }
-
-        if (!data_stack.empty())
-        {
-            return false;
-        }
-
-        else
-        {
-            return true;
-        }
-    }
 }
+
