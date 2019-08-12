@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.0)
 
 project(HomeworkTests VERSION 1.0.0)
 
-set(LESSON_NUMBER 1)
+set(LESSON_NUMBER 2)
 set(LESSON_DIR Lesson${LESSON_NUMBER})
 
 set(sources
@@ -10,9 +10,9 @@ set(sources
 )
 
 set(headers
-    "src/${LESSON_DIR}/Homework.h")
+    "include/${LESSON_DIR}/Homework.h")
 
-add_library(HomeworkTests SHARED ${sources})
+add_library(HomeworkTests SHARED ${sources} ${headers})
 
 set_target_properties(HomeworkTests PROPERTIES
                         C_STANDARD 11
