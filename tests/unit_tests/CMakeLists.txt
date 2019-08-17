@@ -28,7 +28,5 @@ get_filename_component(HomeworkTests_REPO_DIRECTORY "${HomeworkTests_UT_ROOT_DIR
 
 include_directories(
         PRIVATE
-        ${HomeworkTests_REPO_DIRECTORY}/include/${LESSON_DIR}
+        ${HomeworkTests_REPO_DIRECTORY}/headers/${LESSON_DIR}
         )
-
-    message(${HomeworkTests_REPO_DIRECTORY})
