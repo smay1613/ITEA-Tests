@@ -4,67 +4,66 @@
 #include <algorithm>
 #include <sstream>
 
- struct cmp
-{
-    bool operator() (std::string lhs, std::string rhs)
-    {
-        std::string tmp_lhs {lhs};
-        std::string tmp_rhs {rhs};
-        std :: transform( tmp_lhs.begin(), tmp_lhs.end(), tmp_lhs.begin(), ::tolower );
-        std :: transform( tmp_rhs.begin(), tmp_rhs.end(), tmp_rhs.begin(), ::tolower );
-        if(tmp_lhs < tmp_rhs)
-            return true;
-        return  false;
-    }
-};
 
- std::vector<std::string> getUniqueWords (const std::string& text){
-    std::set<std::string, cmp>textCheck;
-    std::stringstream textStream;
-    std::string tmp;
-    textStream << text;
-    while(!textStream.eof())
-    {
-        textStream >> tmp;
-        textCheck.insert(tmp);
+void toLower(std::string &stringToLower) {
+    for (char & entry: stringToLower) {
+        entry = entry <= 'Z' && entry >= 'A'? entry - 'A' + 'a' : entry;
     }
-    std::vector<std::string>result{textCheck.begin(), textCheck.end()};
+}
+
+std::vector<std::string> getUniqueWords(const std::string & text) {
+    size_t indexOfBegin, indexOfEnd, currentPosition{0};
+    std::string word, punctuation(" ");
+    std::set<std::string> usedWords;
+    std::vector<std::string> result;
+
+    while (currentPosition != text.npos) {
+        indexOfBegin = text.find_first_not_of(punctuation, currentPosition);
+        if (indexOfBegin < text.length()) {
+            indexOfEnd = text.find_first_of(punctuation, indexOfBegin);
+            if (indexOfEnd < text.length()) {
+                word = text.substr(indexOfBegin, indexOfEnd - indexOfBegin);
+            }
+            else {
+                word = text.substr(indexOfBegin, text.length() - indexOfBegin);
+            }
+            toLower(word);
+            if (usedWords.insert(word).second)
+                result.push_back(word);
+            currentPosition = indexOfEnd;
+        }
+        else currentPosition = indexOfBegin;
+    }
+
     return result;
 }
 
+std::vector<std::pair<std::string, size_t>> wordCounter(const std::string & text) {
+    size_t indexOfBegin, indexOfEnd, currentPosition{0};
+    std::string word, punctuation(" ");
+    std::map<std::string, int> usedWords;
+    std::vector<std::pair<std::string, size_t>> result;
 
- std::vector<std::pair<std::string, size_t>> wordCounter (const std::string& text){
-    std::map<std::string, size_t, cmp>result;
-    std::vector<std::pair<std::string, size_t>> resultReturn{};
-    std::string tmp{};
-    if(text == tmp){
-        result.emplace("",0);
-        resultReturn.push_back(*result.begin());
-        return resultReturn;
-    }
-    std::stringstream textStream;
-    textStream << text;
-    while(!textStream.eof())
-    {
-        textStream >> tmp;
-        if(result.empty()){
-            result.emplace(tmp, 1);
-            tmp.clear();
-        }
-        else{
-            if(result.find(tmp) != result.end()){
-                auto it = result.find(tmp);
-                it->second ++;
-                tmp.clear();
+    while (currentPosition != text.npos) {
+        indexOfBegin = text.find_first_not_of(punctuation, currentPosition);
+        if (indexOfBegin < text.length()) {
+            indexOfEnd = text.find_first_of(punctuation, indexOfBegin);
+            if (indexOfEnd < text.length()) {
+                word = text.substr(indexOfBegin, indexOfEnd - indexOfBegin);
             }
             else {
-                result.emplace(tmp, 1);
-                tmp.clear();
+                word = text.substr(indexOfBegin, text.length() - indexOfBegin);
             }
+            toLower(word);
+            usedWords[word]++;
+            currentPosition = indexOfEnd;
         }
+        else currentPosition = indexOfBegin;
     }
-    for(const auto &value: result){
-        resultReturn.push_back(value);
+
+    for (const auto & entry: usedWords) {
+        result.push_back(entry);
     }
-    return resultReturn;
+
+    return result;
 }
