@@ -2,25 +2,41 @@
 #include <queue>
 #include <stack>
 
-struct node
-{
-    node (int _n)
-        : n(_n)
-    {}
-    node (int _n, node *_left, node *_right)
-        : n(_n),
-          left(_left),
-          right(_right)
-    {}
-    int n = 0;
-    struct node *left = nullptr;
-    struct node *right = nullptr;
-    struct node *level = nullptr;
-};
 
-void linkLevelnodes(node* root)
-{
 
+void linkLevelNodes(node* root)
+{
+    std::queue<node *> level;
+        level.push(root);
+        while (!level.empty()) {
+            std::queue<node *> nextLevel;
+            node* nodePointer = level.front();
+            level.pop();
+            if (nodePointer->left != nullptr) {
+                nextLevel.push(nodePointer->left);
+            }
+            if (nodePointer->right != nullptr) {
+                nextLevel.push(nodePointer->right);
+            }
+
+             while (!level.empty()) {
+                nodePointer->level = level.front();
+                nodePointer = nodePointer->level;
+                if (nodePointer->left != nullptr) {
+                    nextLevel.push(nodePointer->left);
+                }
+                if (nodePointer->right != nullptr) {
+                    nextLevel.push(nodePointer->right);
+                }
+                level.pop();
+            }
+            nodePointer->level = nullptr;
+
+             while (!nextLevel.empty()) {
+                level.push(nextLevel.front());
+                nextLevel.pop();
+            }
+        }
 }
 
 bool isExpressionValid(const std::string &expression)

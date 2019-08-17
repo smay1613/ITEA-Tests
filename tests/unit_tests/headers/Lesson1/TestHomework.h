@@ -16,6 +16,10 @@ class UnionTest : public ::testing::Test {
 
 };
 
+class testSet : public ::testing::Test {
+
+};
+
 class magic_number : public ::testing::TestWithParam<std::tuple<size_t, size_t, size_t>>
 {
 };
