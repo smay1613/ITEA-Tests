@@ -91,8 +91,8 @@ int numberTestResultMap {0};
 
 TEST_P(wordCounterData, needTrue)
 {
-//    std::vector<std::pair<std::string, size_t>>result_vector = wordCounter(GetParam());
-//    EXPECT_EQ(true, comparatorForMap(result_vector, correctResult[numberTestResultMap++]));
+    std::vector<std::pair<std::string, size_t>>result_vector = wordCounter(GetParam());
+    EXPECT_EQ(true, comparatorForMap(result_vector, correctResult[numberTestResultMap++]));
 }
 
 TEST_P(getUniqueWordsT, testCase)
