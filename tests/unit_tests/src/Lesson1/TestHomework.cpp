@@ -62,8 +62,7 @@ TEST(MagicNumber_Tests, EQ_Test)
 
 TEST(MagicNumber_Tests, Test_16_9)
 {
-    /* This test crashes application */
-//    EXPECT_EQ(162646661616264666, magicNumber(16,9));
+    EXPECT_EQ(162646661616264666, magicNumber(16,9));
 }
 
 TEST(MagicNumber_Tests, Test_17_13)
@@ -73,8 +72,7 @@ TEST(MagicNumber_Tests, Test_17_13)
 
 TEST(MagicNumber_Tests, Test_Zero)
 {
-    /* This test crashes application */
-//    EXPECT_EQ(0, magicNumber(0,13));
+    EXPECT_EQ(0, magicNumber(0,13));
 }
 
 TEST(MagicNumber_Tests, Test_One)
