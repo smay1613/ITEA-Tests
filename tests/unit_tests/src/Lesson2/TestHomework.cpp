@@ -175,93 +175,186 @@
      linkLevelNodes(root);
     EXPECT_TRUE(isEqual(root, resultRoot));
 }
+ TEST(IsExpressionValid, Test1)
+ {
+     std::string InpStr = "[][]({})";
+     EXPECT_EQ(true, isExpressionValid(InpStr));
+ }
 
-TEST_F(is_expression_valid_test, 1)
-{
-    bool result = isExpressionValid(is_expression_valid_str_1);
-    EXPECT_EQ(result, is_expression_valid_result_1);
-}
+ TEST(IsExpressionValid, Test2)
+ {
+     std::string InpStr = "[][]({}]";
+     EXPECT_EQ(false, isExpressionValid(InpStr));
+ }
 
-TEST_F(is_expression_valid_test, 2)
-{
-    bool result = isExpressionValid(is_expression_valid_str_2);
-    EXPECT_FALSE(result != is_expression_valid_result_2);
-}
+ TEST(IsExpressionValid, Test3)
+ {
+     std::string InpStr = "[()]{}{[()()]()}";
+     EXPECT_EQ(true, isExpressionValid(InpStr));
+ }
 
-TEST_F(is_expression_valid_test, 3)
-{
-    bool result = isExpressionValid(is_expression_valid_str_3);
-    EXPECT_EQ(result, is_expression_valid_result_3);
-}
+ TEST(IsExpressionValid, Test4)
+ {
+     std::string InpStr = "[)";
+     EXPECT_EQ(false, isExpressionValid(InpStr));
+ }
 
-TEST_F(is_expression_valid_test, 4)
-{
-    bool result = isExpressionValid(is_expression_valid_str_4);
-    EXPECT_EQ(result, is_expression_valid_result_4);
-}
-
-TEST_F(is_expression_valid_test, 5)
-{
-    bool result = isExpressionValid(is_expression_valid_str_5);
-    EXPECT_EQ(result, is_expression_valid_result_5);
-}
-
-INSTANTIATE_TEST_CASE_P(TrueBrackets,
-                        isExpressionValidTrue,
-                        ::testing::Values("()()([][]{})", "[][]", "{}{}{()()(){}[()()]}()()", "{}()[]", ""
-                                          ));
-
-TEST_P(isExpressionValidTrue, IsTrue)
-{
-
-    bool result = isExpressionValid(GetParam());
-    EXPECT_EQ(result, true);
-}
+ TEST(IsExpressionValid, Test5)
+ {
+     std::string InpStr = "";
+     EXPECT_EQ(true, isExpressionValid(InpStr));
+ }
 
 
-INSTANTIATE_TEST_CASE_P(FalseBrackets,
-                        isExpressionValidFalse,
-                        ::testing::Values("{}{}{}{", "()(()([][]{})" , ")(}{[]", "][", "{}}{"
-                                          ));
+ TEST(isExpressionValidTest1, isExpressionValid) {
+   EXPECT_EQ(isExpressionValid(""),true);
+ }
 
-TEST_P(isExpressionValidFalse, IsFalse)
-{
+ TEST(isExpressionValidTest2, isExpressionValid) {
+   EXPECT_EQ(isExpressionValid(")([{}])("),false);
+ }
 
-    bool result = isExpressionValid(GetParam());
-    EXPECT_EQ(result, false);
-}
+ TEST(isExpressionValidTest3, isExpressionValid) {
+   EXPECT_EQ(isExpressionValid("({[]}))("),false);
+ }
 
-TEST_P(isExpressionValidTest, testCase)
-{
-    std::string string = std::get<0> (GetParam());
-    bool expected = std::get<1> (GetParam());
-    bool result = isExpressionValid(string);
-    EXPECT_EQ(result, expected);
-};
+ TEST(isExpressionValidTest4, isExpressionValid) {
+   EXPECT_EQ(isExpressionValid("[]({[]})({})"),true);
+ }
 
-INSTANTIATE_TEST_CASE_P(chekingExpression, isExpressionValidTest,::testing::Values
-                        (
-                            std::make_pair(std::string { "()" },                bool {true}),
-                            std::make_pair(std::string { ")(" },                bool {false}),
-                            std::make_pair(std::string { "((()()())()())" },    bool {true}),
-                            std::make_pair(std::string { "())(" },              bool {false}),
-                            std::make_pair(std::string { "[)" },                bool {false}),
-                            std::make_pair(std::string { "([])" },              bool {true}),
-                            std::make_pair(std::string { "[()]{}{[()()]()}" },  bool {true})
-                            )
-                        );
+ TEST(isExpressionValidTest5, isExpressionValid) {
+   EXPECT_EQ(isExpressionValid("(((({{{{[[[["),false);
+ }
 
-TEST_P(AllBracketsClosed, DifferentIncome) {
-  std::string inputString = std::get<0>(GetParam());
-  bool expectedResult = std::get<1>(GetParam());
-  EXPECT_EQ(isExpressionValid(inputString), expectedResult);
-}
 
-INSTANTIATE_TEST_CASE_P(AllClosed,
-                        AllBracketsClosed,
-                        ::testing::Values (std::make_tuple("()", true),
-                                           std::make_tuple("())(", false),
-                                           std::make_tuple("(){}[]", true),
-                                           std::make_tuple("({[)}]", true),
-                                           std::make_tuple("{{((()))}[]]", false)
-                                           ));
+ TEST(linkLevelNodesTest1, linkLevelNodes) {
+   node node7 {7, nullptr,nullptr,nullptr};
+   node node6 {6, nullptr,nullptr,nullptr};
+   node node5 {5, &node6 ,&node7 ,nullptr};
+   node node4 {4, nullptr,nullptr,nullptr};
+   node node3 {3, &node5 ,nullptr,nullptr};
+   node node2 {2, &node3 , &node4,nullptr};
+   node node1 {1, &node2 ,nullptr, nullptr};
+   linkLevelNodes(&node1);
+   EXPECT_EQ(node1.level, nullptr);
+   EXPECT_EQ(node2.level, nullptr);
+   EXPECT_EQ(node3.level, &node4);
+   EXPECT_EQ(node4.level, nullptr);
+   EXPECT_EQ(node5.level, nullptr);
+   EXPECT_EQ(node6.level, &node7);
+   EXPECT_EQ(node7.level, nullptr);
+ }
+
+ TEST(linkLevelNodesTest2, linkLevelNodes) {
+   node node9 {9, nullptr,nullptr,nullptr};
+   node node8 {8, nullptr,nullptr,nullptr};
+   node node7 {7, nullptr,nullptr,nullptr};
+   node node6 {6, nullptr,nullptr,nullptr};
+   node node5 {5, &node8 ,&node9 ,nullptr};
+   node node4 {4, &node6 ,&node7,nullptr};
+   node node3 {3, &node5 ,nullptr,nullptr};
+   node node2 {2, nullptr,&node4,nullptr};
+   node node1 {1, &node2 ,&node3, nullptr};
+   linkLevelNodes(&node1);
+   EXPECT_EQ(node2.level, &node3);
+   EXPECT_EQ(node4.level, &node5);
+   EXPECT_EQ(node6.level, &node7);
+   EXPECT_EQ(node7.level, &node8);
+   EXPECT_EQ(node8.level, &node9);
+   EXPECT_EQ(node2.level, &node3);
+   EXPECT_EQ(node5.level, nullptr);
+ }
+
+ TEST(linkLevelNodesTest3, linkLevelNodes) {
+   linkLevelNodes(nullptr);
+ }
+
+ TEST(linkLevelNodesTest4, linkLevelNodes) {
+   node node5 {5, nullptr,nullptr,nullptr};
+   node node4 {4, nullptr,&node5,nullptr};
+   node node3 {3, nullptr,&node4,nullptr};
+   node node2 {2, nullptr,&node3,nullptr};
+   node node1 {1, nullptr,&node2,nullptr};
+   linkLevelNodes(&node1);
+   EXPECT_EQ(node1.level, nullptr);
+   EXPECT_EQ(node2.level, nullptr);
+   EXPECT_EQ(node3.level, nullptr);
+   EXPECT_EQ(node4.level, nullptr);
+   EXPECT_EQ(node5.level, nullptr);
+ }
+
+ TEST(linkLevelNodesTest5, linkLevelNodes) {
+   node node6 {6, nullptr,nullptr,nullptr};
+   node node5 {5, nullptr,nullptr,nullptr};
+   node node4 {4, &node5,&node6,nullptr};
+   node node3 {3, nullptr,&node4,nullptr};
+   node node2 {2, nullptr,&node3,nullptr};
+   node node1 {1, nullptr,&node2,nullptr};
+   linkLevelNodes(&node1);
+   EXPECT_EQ(node1.level, nullptr);
+   EXPECT_EQ(node2.level, nullptr);
+   EXPECT_EQ(node3.level, nullptr);
+   EXPECT_EQ(node4.level, nullptr);
+   EXPECT_EQ(node5.level, &node6);
+   EXPECT_EQ(node6.level, nullptr);
+ }
+
+ TEST(Parentheses_Test, Test_1)
+ {
+     std::string input {"{{}[[()]()]{}}"};
+     bool answer = isExpressionValid(input);
+
+     EXPECT_EQ(answer, true);
+ }
+
+ TEST(Parentheses_Test, Test_2)
+ {
+     std::string input {""};
+     bool answer = isExpressionValid(input);
+
+     EXPECT_EQ(answer, true);
+ }
+
+ TEST(Parentheses_Test, Test_3)
+ {
+     std::string input {"{{}[[(]()]{}}"};
+     bool answer = isExpressionValid(input);
+
+     EXPECT_EQ(answer, false);
+ }
+ TEST(Parentheses_Test, Test_4)
+ {
+     std::string input {"{{}[[]()]{}}({])"};
+     bool answer = isExpressionValid(input);
+
+     EXPECT_EQ(answer, false);
+ }
+ TEST(Parentheses_Test, Test_5)
+ {
+     std::string input {"{{{}[[()]()]}{}}"};
+     bool answer = isExpressionValid(input);
+
+     EXPECT_EQ(answer, true);
+ }
+
+ TEST(Tree_Test, Test_1)
+ {
+     node a, b, c, d, e, f, g;
+     a = {1, &b, &c, nullptr};
+     b = {2, &d, &e, nullptr};
+     c = {3, nullptr, &f, nullptr};
+     d = {4, &g, nullptr, nullptr};
+     e = {5, nullptr, nullptr, nullptr};
+     f = {6, nullptr, nullptr, nullptr};
+     g = {7, nullptr, nullptr, nullptr};
+     node* tree_root = &a;
+     linkLevelNodes(tree_root);
+
+     EXPECT_EQ(a.level, nullptr);
+     EXPECT_EQ(b.level, &c);
+     EXPECT_EQ(c.level, nullptr);
+     EXPECT_EQ(d.level, &e);
+     EXPECT_EQ(e.level, &f);
+     EXPECT_EQ(f.level, nullptr);
+     EXPECT_EQ(g.level, nullptr);
+ }

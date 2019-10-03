@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.0)
 
 project(HomeworkTests VERSION 1.0.0)
 
-set(LESSON_NUMBER 1)
+set(LESSON_NUMBER 2)
 set(LESSON_DIR Lesson${LESSON_NUMBER})
 
 set(sources
