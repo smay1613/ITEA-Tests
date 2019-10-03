@@ -1,86 +1,94 @@
 #include "Homework.h"
-#include <queue>
 #include <stack>
+#include <queue>
+#include <map>
 
+int getNodeLevel (node* nodeToObserve, node* nodeTofind, int level)
+{
+    if(nodeToObserve == nullptr)
+    {
+        return 0;
+    }
+    if(nodeToObserve == nodeTofind)
+    {
+        return  level;
+    }
 
+    int downLevel = getNodeLevel(nodeToObserve->left, nodeTofind, level + 1);
+    if(downLevel != 0)
+    {
+        return downLevel;
+    }
+
+    downLevel = getNodeLevel(nodeToObserve->right, nodeTofind, level + 1);
+    return downLevel;
+
+}
 
 void linkLevelNodes(node* root)
 {
-    std::queue<node *> level;
-        level.push(root);
-        while (!level.empty()) {
-            std::queue<node *> nextLevel;
-            node* nodePointer = level.front();
-            level.pop();
-            if (nodePointer->left != nullptr) {
-                nextLevel.push(nodePointer->left);
-            }
-            if (nodePointer->right != nullptr) {
-                nextLevel.push(nodePointer->right);
-            }
+    if(root == nullptr)
+    {
+        return;
+    }
 
-             while (!level.empty()) {
-                nodePointer->level = level.front();
-                nodePointer = nodePointer->level;
-                if (nodePointer->left != nullptr) {
-                    nextLevel.push(nodePointer->left);
-                }
-                if (nodePointer->right != nullptr) {
-                    nextLevel.push(nodePointer->right);
-                }
-                level.pop();
-            }
-            nodePointer->level = nullptr;
+    std::queue<node*> discoveredNodes;
+    discoveredNodes.push(root);
 
-             while (!nextLevel.empty()) {
-                level.push(nextLevel.front());
-                nextLevel.pop();
+    while(!discoveredNodes.empty())
+    {
+        node* current_node = discoveredNodes.front();
+        discoveredNodes.pop();
+        node* next_node = nullptr;
+        if(!discoveredNodes.empty())
+        {
+            next_node = discoveredNodes.front();
+
+            int nodeLevelDifference = getNodeLevel(root, current_node, 0) - getNodeLevel(root, next_node, 0);
+
+            if(nodeLevelDifference == 0)
+            {
+                current_node->level = next_node;
             }
+        }
+
+        if (current_node->left != nullptr)
+        {
+            discoveredNodes.push(current_node->left);
+        }
+
+        if (current_node->right != nullptr)
+        {
+            discoveredNodes.push(current_node->right);
+        }
         }
 }
 
 bool isExpressionValid(const std::string &expression)
 {
-    std::vector<char> brackets {};
-    for (auto &value : expression) {
-        brackets.push_back(value);
-    }
+    std::stack<char> receivedMessage;
+    std::map<char, char> openBracketsMap {{'(', ')'}, {'[', ']'}, {'{', '}'}};
+    std::map<char, char> closedBracketsMap {{')', '('}, {']', '['}, {'}', '{'}};
 
-    bool closedBracketsCheck = false;
-
-    if (brackets.size() != 0) {
-        std::stack<char, std::vector<char>> bracketsStack {};
-        int counter {};
-
-        if (*brackets.begin() == ')' || *brackets.begin() == '}' || *brackets.begin() == ']') {
-            return false;
-        } else if (brackets.back() == '(' || brackets.back() == '{' || brackets.back() == '[') {
-            return false;
-        } else {
-            for (auto &value : brackets) {
-                bracketsStack.push(value);
-                if (bracketsStack.top() == '(') {
-                    ++counter;
-                } else if (bracketsStack.top() == '{') {
-                    counter += 2;
-                } else if (bracketsStack.top() == '[') {
-                    counter += 3;
-                } else if (bracketsStack.top() == ')') {
-                    --counter;
-                } else if (bracketsStack.top() == '}') {
-                    counter -= 2;
-                } else if (bracketsStack.top() == ']') {
-                    counter -= 3;
-                }
+    for(const auto& element : expression)
+    {
+        if(openBracketsMap.find(element) != openBracketsMap.end())
+        {
+            receivedMessage.push(element);
+        }
+        else
+        {
+            if (!receivedMessage.empty() && closedBracketsMap.find(element)->second == receivedMessage.top())
+            {
+                receivedMessage.pop();
+            }
+            else
+            {
+                return false;
             }
         }
-        if (counter == 0) {
-            closedBracketsCheck = true;
-        } else {
-            closedBracketsCheck = false;
-        }
-    } else {
     }
-    return closedBracketsCheck;
+
+    return receivedMessage.empty();
 }
 
