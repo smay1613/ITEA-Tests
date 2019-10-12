@@ -3,63 +3,75 @@
 #include <map>
 #include <algorithm>
 #include <sstream>
+struct caseInsensitiveComparator {
+    bool operator()(const std::string& lhs, const std::string& rhs) const {
+            if (lhs.size() != rhs.size()) {
+                return true;
+            }
 
-std::vector<std::string> getUniqueWords(const std::string & text) {
-    std::vector<std::string> words_vector;
-        std::set<std::string> words_set;
-        std::string word;
-        std::stringstream str_stream;
+            for (size_t i = 0; i < rhs.size(); ++i) {
+                if (std::toupper(lhs[i]) != std::toupper(rhs[i])) {
+                    return true;
+                }
+            }
 
-        str_stream << text;
-        while (!str_stream.eof())
+            return false;
+    }
+};
+
+std::vector<std::string> getUniqueWords (const std::string& text)
+{
+    std::set<std::string, caseInsensitiveComparator> uniqueWords;
+
+    std::string modifiedText {text};
+    modifiedText.erase(std::remove_if(modifiedText.begin(), modifiedText.end(), ispunct), modifiedText.end());
+
+    std::stringstream stream(modifiedText);
+    std::string word;
+
+    while(std::getline(stream, word, ' '))
         {
-            str_stream >> word;
-            words_set.insert(word);
+            uniqueWords.insert(word);
         }
 
-        for (const auto& element : words_set)
-        {
-            words_vector.push_back(element);
-        }
+    std::vector<std::string> wordsVector;
+    wordsVector.reserve(uniqueWords.size());
 
-        return words_vector;
+    for(const auto& element : uniqueWords)
+    {
+        wordsVector.push_back(std::move(element));
+    }
+
+    return  wordsVector;
 }
 
-std::vector<std::pair<std::string, size_t>> wordCounter(const std::string & text) {
-    std::vector<std::pair<std::string, size_t>> words_vector;
-        std::map<std::string, size_t> words_map;
-        std::string word;
-        std::stringstream str_stream;
+std::vector<std::pair<std::string, size_t>> wordCounter (const std::string& text)
+{
+    std::map<std::string, size_t, caseInsensitiveComparator> uniqueWordsCounter;
 
-        str_stream << text;
-        while (!str_stream.eof())
+    std::string modifiedText {text};
+    modifiedText.erase(std::remove_if(modifiedText.begin(), modifiedText.end(), ispunct), modifiedText.end());
+
+    std::stringstream stream(modifiedText);
+    std::string word;
+
+    while(std::getline(stream, word, ' '))
         {
-            str_stream >> word;
-            if (words_map.empty())
-            {
-                words_map.insert(std::make_pair(word, 1));
-                word.clear();
-            }
-            else
-            {
-                std::map<std::string, size_t>::iterator element = words_map.find(word);
+            auto insertionCheck = uniqueWordsCounter.insert({word,1});
 
-                if (element != words_map.end())
-                {
-                    element->second++;
-                    word.clear();
-                }
-                else {
-                    words_map.insert(std::make_pair(word, 1));
-                    word.clear();
-                }
+            if(insertionCheck.second == false)
+            {
+                insertionCheck.first->second += 1;
             }
         }
 
-        for (const auto & element : words_map)
-        {
-            words_vector.push_back(element);
-        }
+    std::vector<std::pair<std::string, size_t>> wordsVector;
+    wordsVector.reserve(uniqueWordsCounter.size());
 
-        return words_vector;
+    for(const auto& element : uniqueWordsCounter)
+    {
+        wordsVector.push_back(std::move(element));
+    }
+
+    return  wordsVector;
 }
