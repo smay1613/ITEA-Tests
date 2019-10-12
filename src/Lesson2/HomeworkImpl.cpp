@@ -1,86 +1,91 @@
 #include "Homework.h"
-#include <queue>
 #include <stack>
+#include <queue>
+#include <map>
+#include <cmath>
 
+int getNodeLevel (node* nodeToObserve, node* nodeTofind, int level)
+{
+    if(nodeToObserve == nullptr)
+    {
+        return 0;
+    }
+    if(nodeToObserve == nodeTofind)
+    {
+        return  level;
+    }
 
+    int downLevel = getNodeLevel(nodeToObserve->left, nodeTofind, level + 1);
+    if(downLevel != 0)
+    {
+        return downLevel;
+    }
+
+    downLevel = getNodeLevel(nodeToObserve->right, nodeTofind, level + 1);
+    return downLevel;
+
+}
 
 void linkLevelNodes(node* root)
 {
-    std::queue<node *> level;
-        level.push(root);
-        while (!level.empty()) {
-            std::queue<node *> nextLevel;
-            node* nodePointer = level.front();
-            level.pop();
-            if (nodePointer->left != nullptr) {
-                nextLevel.push(nodePointer->left);
-            }
-            if (nodePointer->right != nullptr) {
-                nextLevel.push(nodePointer->right);
-            }
+    if (nullptr == root) {
+       return;
+     }
+     std::queue<node*> ptrNode;
+     ptrNode.push(root);
+     size_t NextLevelNodes {0};
+     size_t expectedNodes {2};
+     bool isPointToNext = true;
+     node* previusNodePtr = nullptr;
+     while (!ptrNode.empty()) {
+       node& currentNode = *(ptrNode.front());
+       if (isPointToNext) {
+         currentNode.level = previusNodePtr;
+       }
+       isPointToNext = true;
+       if (currentNode.right != nullptr) {
+         ptrNode.push(currentNode.right);
+         ++NextLevelNodes;
+       } else {
+         --expectedNodes;
+       }
+       if (currentNode.left != nullptr) {
+       ptrNode.push(currentNode.left);
+         ++NextLevelNodes;
+       } else {
+         --expectedNodes;
+       }
+       if (expectedNodes == NextLevelNodes) {
+         expectedNodes = pow(2, expectedNodes);
+         NextLevelNodes = 0;
+         isPointToNext = false;
+       }
+       previusNodePtr = &currentNode;
+       ptrNode.pop();
+     }
+}
 
-             while (!level.empty()) {
-                nodePointer->level = level.front();
-                nodePointer = nodePointer->level;
-                if (nodePointer->left != nullptr) {
-                    nextLevel.push(nodePointer->left);
-                }
-                if (nodePointer->right != nullptr) {
-                    nextLevel.push(nodePointer->right);
-                }
-                level.pop();
-            }
-            nodePointer->level = nullptr;
-
-             while (!nextLevel.empty()) {
-                level.push(nextLevel.front());
-                nextLevel.pop();
-            }
-        }
+inline char OpositBracket(const char BRACKET) {
+  std::map<char, char> bracketsMap {{'(',')'},{'[',']'},{'{','}'}};
+  return bracketsMap.at(BRACKET);
 }
 
 bool isExpressionValid(const std::string &expression)
 {
-    std::vector<char> brackets {};
-    for (auto &value : expression) {
-        brackets.push_back(value);
-    }
-
-    bool closedBracketsCheck = false;
-
-    if (brackets.size() != 0) {
-        std::stack<char, std::vector<char>> bracketsStack {};
-        int counter {};
-
-        if (*brackets.begin() == ')' || *brackets.begin() == '}' || *brackets.begin() == ']') {
-            return false;
-        } else if (brackets.back() == '(' || brackets.back() == '{' || brackets.back() == '[') {
-            return false;
+    std::stack<char> bracketsStack;
+      for (char bracket : expression) {
+        if (bracket == '(' ||
+            bracket == '[' ||
+            bracket == '{') {
+          bracketsStack.push(bracket);
         } else {
-            for (auto &value : brackets) {
-                bracketsStack.push(value);
-                if (bracketsStack.top() == '(') {
-                    ++counter;
-                } else if (bracketsStack.top() == '{') {
-                    counter += 2;
-                } else if (bracketsStack.top() == '[') {
-                    counter += 3;
-                } else if (bracketsStack.top() == ')') {
-                    --counter;
-                } else if (bracketsStack.top() == '}') {
-                    counter -= 2;
-                } else if (bracketsStack.top() == ']') {
-                    counter -= 3;
-                }
-            }
+          if (bracketsStack.empty()) {return false;}
+          if (bracket != OpositBracket(bracketsStack.top())) {
+            return false;
+          }
+          bracketsStack.pop();
         }
-        if (counter == 0) {
-            closedBracketsCheck = true;
-        } else {
-            closedBracketsCheck = false;
-        }
-    } else {
-    }
-    return closedBracketsCheck;
+      }
+      return bracketsStack.empty();
 }
 
